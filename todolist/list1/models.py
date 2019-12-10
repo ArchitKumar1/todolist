@@ -7,3 +7,5 @@ class Item(models.Model):
     task  = models.CharField(max_length=5000)
     itemid = models.CharField(max_length=50)
     checkstatus = models.CharField(max_length=40)
+
+
