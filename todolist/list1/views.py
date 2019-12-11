@@ -2,67 +2,85 @@
 from __future__ import unicode_literals
 import json
 from django.shortcuts import render_to_response
-from .models import Task
+from .models import *
 from django.core import serializers
 from django.http import HttpResponse,JsonResponse,request,response
 from django.views.decorators.csrf import csrf_exempt
 import ast
 
+
 @csrf_exempt
-def task(request):
+def home(request,userid):
     if (request.method == 'GET'):
+        return JsonResponse("User Found",safe=False)
+
+
+def user_add(request):
+    if(request.method == 'POST'):
+        data = json.loads(request.body)
+        print data
+
+        new_user = User(name = data.get('name'),user_id = data.get('user_id'),active = data.get('active'))
+        new_user.save()
+        return JsonResponse("user added",safe =False)
+
+def group_add(request):
+    if(request.method == 'POST'):
+        data = json.loads(request.body)
+        group_owner = User.objects.filter(user_id=data.get('user_id'))
+        new_group = Group(group_id = data.get('group_id'),title = data.get('title'),user_id = group_owner[0])
+        new_group.save()
+        return JsonResponse("group added",safe= False)
+
+def task_add(request):
+    if(request.method == 'POST'):
+        data = json.loads(request.body)
+        task_owner = Group.objects.filter(group_id =data.get('group_id'))
+        new_task = Task(task_id = data.get('task_id'),description = data.get('description'),status = data.get('status'),group_id = task_owner[0])
+        new_task.save()
+        return JsonResponse("task added",safe= False)
+
+def user_get(request):
+    if (request.method == 'POST'):
         serial = serializers.serialize('json', Task.objects.all())
         return JsonResponse(json.loads(serial), safe=False)
-    elif (request.method == 'POST'):
+
+def group_get(request):
+    if (request.method == 'POST'):
+        serial = serializers.serialize('json', Task.objects.all())
+        return JsonResponse(json.loads(serial), safe=False)
+
+def task_get(request):
+    if(request.method == 'POST'):
+        serial = serializers.serialize('json', Task.objects.all())
+        return JsonResponse(json.loads(serial), safe=False)
+
+def task_get_from_group(request):
+    print "Hello"
+    if (request.method == 'POST'):
         data = json.loads(request.body)
-        newTask = Task(taskDescription=data.get('taskDescription'), taskId=data.get('taskId'),
-                        taskGroupId=data.get('taskGroupId'), taskStatus=data.get('taskStatus'))
-        newTask.save()
-        return JsonResponse("succesfully submitted", safe=False)
-    elif (request.method == 'DELETE'):
-        Task.objects.filter(taskDescription="hello").delete()
-        return JsonResponse("succesfully submitted", safe=False)
+        print data
+        all_tasks = Task.objects.filter(group_id=data.get('group_id'))
+        serial = serializers.serialize('json', all_tasks)
+        return JsonResponse(json.loads(serial), safe=False)
+
+
+# @csrf_exempt
+# def task(request):
+#     if (request.method == 'GET'):
+#         serial = serializers.serialize('json', Task.objects.all())
+#         return JsonResponse(json.loads(serial), safe=False)
+#     elif (request.method == 'POST'):
+#         data = json.loads(request.body)
+#         newTask = Task(taskDescription=data.get('taskDescription'), taskId=data.get('taskId'),
+#                         taskGroupId=data.get('taskGroupId'), taskStatus=data.get('taskStatus'))
+#         newTask.save()
+#         return JsonResponse("succesfully submitted", safe=False)
+#     elif (request.method == 'DELETE'):
+#         Task.objects.filter(taskDescription="hello").delete()
+#         return JsonResponse("succesfully submitted", safe=False)
 
 def login(request):
     pass
 def signup(request):
     pass
-# # -*- coding: utf-8 -*-
-# from __future__ import unicode_literals
-# import json
-# from django.shortcuts import render_to_response
-# from .models import Item
-# from django.core import serializers
-# from django.http import HttpResponse,JsonResponse,request,response
-# from django.views.decorators.csrf import csrf_exempt
-# import ast
-#
-# @csrf_exempt
-# def view_all_items(request):
-#     serial = serializers.serialize('json', Item.objects.all())
-#     return JsonResponse(json.loads(serial),safe=False)
-#
-# @csrf_exempt
-# def add_item_page(request):
-#     if (request.method == 'GET'):
-#         return render_to_response('a.html')
-#
-# @csrf_exempt
-# def add_item(request):
-#     if(request.method  == 'POST'):
-#         print request.body
-#         json_data = json.loads(request.body)
-#         data1 = Item(task = json_data['task'],itemid = json_data['itemid'],checkstatus = json_data['checkstatus'])
-#         data1.save()
-#         serial = serializers.serialize('json',[data1,])
-#         return JsonResponse(json.loads(serial),safe=False)
-#
-# @csrf_exempt
-# def delete_item(request):
-#     if(request.method  == 'GET'):
-#         json_data = json.loads(request.body)
-#         id = json_data['id']
-#         item_To_Be_Deleted = Item.objects.filter(itemid =id )
-#         Item.objects.filter(itemid = id).delete()
-#         serial = serializers.serialize('json',item_To_Be_Deleted)
-#         return JsonResponse(json.loads(serial),safe=False)

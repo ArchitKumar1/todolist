@@ -3,16 +3,33 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-class Task(models.Model):
-    taskDescription  = models.CharField(max_length=200)
-    taskId = models.CharField(max_length=50)
-    taskGroupId = models.CharField(max_length=50)
-    taskStatus = models.BooleanField()
-
 
 class User(models.Model):
-    userName = models.CharField(max_length=30)
-    userId = models.CharField(max_length=30)
-    userPassword = models.CharField(max_length=80)
+    name = models.CharField(max_length = 20,default="")
+    user_id = models.CharField(max_length = 20,primary_key=True,default="")
+    active = models.BooleanField(default=True)
+
+
+class Credentials(models.Model):
+
+    password = models.CharField(max_length=20,default="")
+    user_id = models.ForeignKey(User,max_length=20,default="")
+
+
+class Group(models.Model):
+    group_id = models.CharField(max_length=30,primary_key=True)
+    title = models.CharField(max_length=30,default="")
+
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+
+class Task(models.Model):
+
+    task_id = models.CharField(max_length=50,primary_key=True,default="")
+    description  = models.CharField(max_length=200,default="")
+    status = models.BooleanField(default=True)
+
+    group_id = models.ForeignKey(Group,on_delete=models.CASCADE)
+
+
 
 
