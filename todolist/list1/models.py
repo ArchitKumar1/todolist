@@ -7,13 +7,8 @@ from django.db import models
 class User(models.Model):
     name = models.CharField(max_length = 20,default="")
     user_id = models.CharField(max_length = 20,primary_key=True,default="")
+    password = models.CharField(max_length=20, default="")
     active = models.BooleanField(default=True)
-
-
-class Credentials(models.Model):
-
-    password = models.CharField(max_length=20,default="")
-    user_id = models.ForeignKey(User,max_length=20,default="")
 
 
 class Group(models.Model):

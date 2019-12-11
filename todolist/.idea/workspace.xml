@@ -2,15 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb6a710e-f748-41dc-a9f1-495ebe705126" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/list1/templates/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list1/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/list1/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list1/templates/a.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/list1/templates/b.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/list1/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/list1/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list1/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/list1/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todolist/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/todolist/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,10 +55,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="369" y="156" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575894292943">
-      <screen x="0" y="23" width="1440" height="822" />
+    <state x="369" y="155" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1576065999446">
+      <screen x="0" y="23" width="1440" height="816" />
     </state>
-    <state x="369" y="155" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.816@0.23.1440.816" timestamp="1575890731456" />
+    <state x="369" y="155" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.816@0.23.1440.816" timestamp="1576065999446" />
     <state x="369" y="156" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.822@0.23.1440.822" timestamp="1575894292943" />
     <state x="436" y="237" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1575912623528">
       <screen x="0" y="23" width="1440" height="808" />
@@ -74,9 +71,14 @@
     <state x="374" y="265" key="com.intellij.ide.util.TipDialog/0.23.1440.808@0.23.1440.808" timestamp="1575911953064" />
     <state x="374" y="266" key="com.intellij.ide.util.TipDialog/0.23.1440.812@0.23.1440.812" timestamp="1575957198978" />
     <state x="374" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.816@0.23.1440.816" timestamp="1575888589764" />
-    <state x="385" y="169" width="670" height="676" key="search.everywhere.popup" timestamp="1575894352835">
-      <screen x="0" y="23" width="1440" height="822" />
+    <state x="375" y="103" width="689" height="693" key="find.popup" timestamp="1576064197648">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="375" y="103" width="689" height="693" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1576064197648" />
+    <state x="385" y="160" width="670" height="741" key="search.everywhere.popup" timestamp="1576064187448">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="385" y="160" width="670" height="741" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1576064187448" />
     <state x="385" y="169" width="670" height="676" key="search.everywhere.popup/0.23.1440.822@0.23.1440.822" timestamp="1575894352835" />
   </component>
 </project>

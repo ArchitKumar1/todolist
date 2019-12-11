@@ -10,10 +10,18 @@ import ast
 
 
 @csrf_exempt
-def home(request,userid):
-    if (request.method == 'GET'):
-        return JsonResponse("User Found",safe=False)
+def login(request):
+    if (request.method == 'POST'):
+        print "posted"
+        data = json.loads(request.body)
+        userAvailable = User.objects.filter(user_id = data.get('user_id'), password=data.get('password'))
+        print(userAvailable)
 
+        if(userAvailable):
+            request.session['username'] = data.get('user_id')
+            return JsonResponse({'message': 'User Authenticated'},safe = False)
+        else:
+            return JsonResponse({'message': 'User Not Found'},safe = False)
 
 def user_add(request):
     if(request.method == 'POST'):
@@ -80,7 +88,8 @@ def task_get_from_group(request):
 #         Task.objects.filter(taskDescription="hello").delete()
 #         return JsonResponse("succesfully submitted", safe=False)
 
-def login(request):
-    pass
+
 def signup(request):
+    pass
+def home(request):
     pass
