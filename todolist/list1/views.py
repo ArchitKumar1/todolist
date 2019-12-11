@@ -6,29 +6,27 @@ from .models import *
 from django.core import serializers
 from django.http import HttpResponse,JsonResponse,request,response
 from django.views.decorators.csrf import csrf_exempt
+from .jwt_operations import encode, decode
 import ast
 
 
 @csrf_exempt
 def login(request):
     if (request.method == 'POST'):
-        print "posted"
         data = json.loads(request.body)
-        userAvailable = User.objects.filter(user_id = data.get('user_id'), password=data.get('password'))
-        print(userAvailable)
-
+        userAvailable = User.objects.filter(user_id = data.get('user_id'), password = data.get('password'))
         if(userAvailable):
-            request.session['username'] = data.get('user_id')
-            return JsonResponse({'message': 'User Authenticated'},safe = False)
+            token = encode(data.get('user_id'))
+            forward_url =  'main'
+            return JsonResponse({'message' : 'User Authenticated', 'token' : token, 'path':forward_url }, status=202)
         else:
-            return JsonResponse({'message': 'User Not Found'},safe = False)
+            return JsonResponse({'message' :'User Not Found'}, status=401)
 
 def user_add(request):
     if(request.method == 'POST'):
         data = json.loads(request.body)
         print data
-
-        new_user = User(name = data.get('name'),user_id = data.get('user_id'),active = data.get('active'))
+        new_user = User(name = data.get('name'), user_id = data.get('user_id'), active = data.get('active'), password = data.get('password'))
         new_user.save()
         return JsonResponse("user added",safe =False)
 
@@ -87,7 +85,6 @@ def task_get_from_group(request):
 #     elif (request.method == 'DELETE'):
 #         Task.objects.filter(taskDescription="hello").delete()
 #         return JsonResponse("succesfully submitted", safe=False)
-
 
 def signup(request):
     pass

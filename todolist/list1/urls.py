@@ -11,7 +11,4 @@ urlpatterns = [
     url('groupget', views.group_get,name = 'group_get'),
     url('taskgetfromgroup', views.task_get_from_group, name = 'task_get_from_group'),
     url('taskget', views.task_get,name = 'task_get'),
-
-
-
 ]

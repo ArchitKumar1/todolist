@@ -55,9 +55,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="369" y="155" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1576065999446">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state x="369" y="146" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1576081905692">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="369" y="146" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1576081905692" />
     <state x="369" y="155" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.816@0.23.1440.816" timestamp="1576065999446" />
     <state x="369" y="156" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.822@0.23.1440.822" timestamp="1575894292943" />
     <state x="436" y="237" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1575912623528">
