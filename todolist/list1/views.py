@@ -6,7 +6,7 @@ from .models import *
 from django.core import serializers
 from django.http import HttpResponse,JsonResponse,request,response
 from django.views.decorators.csrf import csrf_exempt
-from .jwt_operations import encode, decode
+from .jwt_operations import encode, decode, authorize
 import ast
 
 
@@ -32,8 +32,9 @@ def user_add(request):
 
 def group_add(request):
     if(request.method == 'POST'):
+        user_id = authorize(request)
+        group_owner = User.objects.filter(user_id=user_id)
         data = json.loads(request.body)
-        group_owner = User.objects.filter(user_id=data.get('user_id'))
         new_group = Group(group_id = data.get('group_id'),title = data.get('title'),user_id = group_owner[0])
         new_group.save()
         return JsonResponse("group added",safe= False)
@@ -52,9 +53,12 @@ def user_get(request):
         return JsonResponse(json.loads(serial), safe=False)
 
 def group_get(request):
-    if (request.method == 'POST'):
+    if (request.method == 'GET'):
+        user_id = decode(request)
         serial = serializers.serialize('json', Task.objects.all())
-        return JsonResponse(json.loads(serial), safe=False)
+        if(len(serial)):
+            return JsonResponse(json.loads(serial), status=200)
+
 
 def task_get(request):
     if(request.method == 'POST'):

@@ -1,4 +1,6 @@
 import jwt
+from django.http import JsonResponse
+import json
 from todolist.settings import SECRET_KEY_JWT, JWT_ALGORITHM
 
 def encode(user_id, expiry=1200):
@@ -12,8 +14,15 @@ def encode(user_id, expiry=1200):
 def decode(token):
     try:
         payload_data = jwt.decode(token, SECRET_KEY_JWT)
+        print payload_data
         return payload_data.user_id
     except jwt.ExpiredSignatureError:
-        return 'Signature expired. Please log in again.'
+        return JsonResponse({'message':'Signature expired. Please log in again.'}, status=401)
     except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'
+        return JsonResponse({'message':'Invalid token. Please log in again.'}, status=401)
+    return null
+
+def authorize(request):
+    headers = json.loads(request.headers)
+    user_id = decode(headers.get('Authorization'))
+    return user_id
