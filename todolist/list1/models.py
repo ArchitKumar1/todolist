@@ -16,6 +16,9 @@ class Group(models.Model):
     title = models.CharField(max_length=30,default="")
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
 
+class User_Group_Mapping(models.Model):
+    group_id = models.CharField(max_length=30,primary_key=True)
+
 class Task(models.Model):
 
     task_id = models.CharField(max_length=50,primary_key=True,default="")

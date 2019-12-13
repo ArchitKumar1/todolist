@@ -25,7 +25,6 @@ def login(request):
 def user_add(request):
     if(request.method == 'POST'):
         data = json.loads(request.body)
-        print data
         new_user = User(name = data.get('name'), user_id = data.get('user_id'), active = data.get('active'), password = data.get('password'))
         new_user.save()
         return JsonResponse("user added",safe =False)
