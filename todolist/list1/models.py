@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+import uuid
+from datetime import datetime
 from django.db import models
 
 
 class User(models.Model):
     name = models.CharField(max_length = 20,default="")
-    user_id = models.CharField(max_length = 20,primary_key=True,default="")
+    user_id = models.CharField(max_length=20, default="",primary_key=True)
     password = models.CharField(max_length=20, default="")
     active = models.BooleanField(default=True)
 
@@ -17,7 +18,9 @@ class Group(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
 
 class User_Group_Mapping(models.Model):
-    group_id = models.CharField(max_length=30,primary_key=True)
+    group_id = models.ForeignKey(Group,default="")
+    user_id = models.ForeignKey(User,default="")
+
 
 class Task(models.Model):
 
@@ -25,6 +28,8 @@ class Task(models.Model):
     description  = models.CharField(max_length=200,default="")
     status = models.BooleanField(default=True)
     group_id = models.ForeignKey(Group,on_delete=models.CASCADE)
+    time_created = models.DateField(auto_now=False, auto_now_add=False,default =datetime.now())
+    time_completed = models.DateField(auto_now=False, auto_now_add=False,default=datetime.now())
 
 
 

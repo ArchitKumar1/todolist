@@ -6,7 +6,8 @@ from .models import *
 from django.core import serializers
 from django.http import HttpResponse,JsonResponse,request,response
 from django.views.decorators.csrf import csrf_exempt
-from .jwt_operations import encode, decode, authorize
+from .jwt_operations import  *
+from .random_gen import *
 import ast
 
 
@@ -34,15 +35,18 @@ def group_add(request):
         user_id = authorize(request)
         group_owner = User.objects.filter(user_id=user_id)
         data = json.loads(request.body)
-        new_group = Group(group_id = data.get('group_id'),title = data.get('title'),user_id = group_owner[0])
+
+        new_group = Group(group_id = get_random_group_id(10),title = data.get('title'),user_id = group_owner[0])
         new_group.save()
+
         return JsonResponse("group added",safe= False)
 
 def task_add(request):
     if(request.method == 'POST'):
         data = json.loads(request.body)
-        task_owner = Group.objects.filter(group_id =data.get('group_id'))
-        new_task = Task(task_id = data.get('task_id'),description = data.get('description'),status = data.get('status'),group_id = task_owner[0])
+        group = Group.objects.filter(group_id =data.get('group_id'))
+
+        new_task = Task(task_id = get_random_task_id(10),description = data.get('description'),status = data.get('status'),group_id = group[0])
         new_task.save()
         return JsonResponse("task added",safe= False)
 
@@ -74,22 +78,3 @@ def task_get_from_group(request):
         return JsonResponse(json.loads(serial), safe=False)
 
 
-# @csrf_exempt
-# def task(request):
-#     if (request.method == 'GET'):
-#         serial = serializers.serialize('json', Task.objects.all())
-#         return JsonResponse(json.loads(serial), safe=False)
-#     elif (request.method == 'POST'):
-#         data = json.loads(request.body)
-#         newTask = Task(taskDescription=data.get('taskDescription'), taskId=data.get('taskId'),
-#                         taskGroupId=data.get('taskGroupId'), taskStatus=data.get('taskStatus'))
-#         newTask.save()
-#         return JsonResponse("succesfully submitted", safe=False)
-#     elif (request.method == 'DELETE'):
-#         Task.objects.filter(taskDescription="hello").delete()
-#         return JsonResponse("succesfully submitted", safe=False)
-
-def signup(request):
-    pass
-def home(request):
-    pass
