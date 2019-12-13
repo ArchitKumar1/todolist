@@ -1,0 +1,110 @@
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        width: 40vw;
+    }
+    form {border: 3px solid #f1f1f1;}
+
+    input[type=text], input[type=password] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 10px;
+        border: none;
+        cursor: pointer;
+        width: 45%;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+
+    .cancelbtn {
+        width: auto;
+        padding: 10px 18px;
+        background-color: #f44336;
+    }
+
+    .imgcontainer {
+        text-align: center;
+        margin: 24px 0 12px 0;
+    }
+
+    img.avatar {
+        width: 40%;
+        border-radius: 50%;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    .outer{
+        
+        display: box;
+        box-pack: center;
+        box-align: center;
+    }
+
+    span.psw {
+        float: right;
+        padding-top: 16px;
+    }
+
+    /* Change styles for span and cancel button on extra small screens */
+    @media screen and (max-width: 300px) {
+        span.psw {
+            display: block;
+            float: none;
+        }
+        .cancelbtn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="outer">
+    <h2>To Do List</h2>
+    <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" ng-model="uname">
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" ng-model="pswd">
+            
+        <button type="submit" ng-click="loginQuery(uname, pswd)">Login</button>
+        <button type="submit" data-toggle="modal" data-target="#modalRegisterForm">Sign Up</button>
+    </div>
+
+    <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Sign up</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <div class="md-form">
+                        <input type="text" class="form-control" placeholder="User Id" ng-model="userid">
+                        <input type="password" class="form-control" placeholder="Your Password" ng-model="pass">
+                        <input type="text" class="form-control" placeholder="Your Name" ng-model="name">
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" ng-click="signup(userid, pass, name)">Sign up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

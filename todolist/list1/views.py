@@ -57,7 +57,7 @@ def user_get(request):
 def group_get(request):
     if (request.method == 'GET'):
         user_id = decode(request)
-        serial = serializers.serialize('json', Group.objects.all())
+        serial = serializers.serialize('json', Group.objects.filter(user_id=user_id))
         print json.loads(serial)
         if(len(serial)):
             return JsonResponse(json.loads(serial), status=200, safe=False)
