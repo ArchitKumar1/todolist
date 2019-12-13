@@ -6,7 +6,7 @@ from .models import *
 from django.core import serializers
 from django.http import HttpResponse,JsonResponse,request,response
 from django.views.decorators.csrf import csrf_exempt
-from .jwt_operations import encode, decode, authorize
+from .jwt_operations import encode, decode
 import ast
 
 
@@ -32,17 +32,19 @@ def user_add(request):
 
 def group_add(request):
     if(request.method == 'POST'):
-        user_id = authorize(request)
+        user_id = decode(request)
+        print(user_id)
         group_owner = User.objects.filter(user_id=user_id)
         data = json.loads(request.body)
-        new_group = Group(group_id = data.get('group_id'),title = data.get('title'),user_id = group_owner[0])
+        print(data)
+        new_group = Group(group_id = data.get('group_id'),title = data.get('group_title'),user_id = group_owner[0])
         new_group.save()
         return JsonResponse("group added",safe= False)
 
 def task_add(request):
     if(request.method == 'POST'):
         data = json.loads(request.body)
-        task_owner = Group.objects.filter(group_id =data.get('group_id'))
+        task_owner = Group.objects.filter(group_id = data.get('group_id'))
         new_task = Task(task_id = data.get('task_id'),description = data.get('description'),status = data.get('status'),group_id = task_owner[0])
         new_task.save()
         return JsonResponse("task added",safe= False)
@@ -55,9 +57,12 @@ def user_get(request):
 def group_get(request):
     if (request.method == 'GET'):
         user_id = decode(request)
-        serial = serializers.serialize('json', Task.objects.all())
+        serial = serializers.serialize('json', Group.objects.all())
+        print json.loads(serial)
         if(len(serial)):
-            return JsonResponse(json.loads(serial), status=200)
+            return JsonResponse(json.loads(serial), status=200, safe=False)
+        else:
+            return JsonResponse(json.loads([]), status=200, safe=False)
 
 
 def task_get(request):
