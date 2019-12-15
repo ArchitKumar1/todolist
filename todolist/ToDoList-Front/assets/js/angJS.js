@@ -56,7 +56,7 @@ app.controller("loginController", function($scope, $http, $window, $location){
 
     $scope.signup = function(userid, pass, name){
         $http({
-            method: 'post',
+            method: 'POST',
             url: API_END_POINT.concat('useradd'),
             data: {'name':name, 'user_id':userid, 'password':pass, 'active':true}
         })
@@ -69,11 +69,11 @@ app.controller("loginController", function($scope, $http, $window, $location){
 
 
 
-/* ======================== Main Page ======================= */
+/* ======================== Main Page ======================== */
 
 
 
-app.controller("mainPage", function($scope, $http, $window, $location) {
+app.controller("mainPage", function($scope, $http, $location) {
 
     $http({
         method: 'GET',
@@ -87,12 +87,6 @@ app.controller("mainPage", function($scope, $http, $window, $location) {
         console.log($scope.taskGroups)
     })  
 
-    /* $scope.taskGroups = [
-        {'taskGroupName' : 'Wubba Lubba Dub Dub', 'tasklist_id' : '1192'}, 
-        {'taskGroupName' : 'Study' , 'tasklist_id' : '9910'},
-        {'taskGroupName' : 'Work' , 'tasklist_id' : '0193'},
-        {'taskGroupName' : 'Dance' , 'tasklist_id' : '00192'},
-    ] */
 
     $scope.addGroup = function(groupName){
         $http({
@@ -101,7 +95,7 @@ app.controller("mainPage", function($scope, $http, $window, $location) {
             headers : {
                 'Authorization' : getCookie('token')
             },
-            data : {'group_title': groupName, 'group_id': 'blindw'}
+            data : {'group_title': groupName}
         })
         .then(function(response){
             console.log(response);
@@ -122,48 +116,101 @@ app.controller("mainPage", function($scope, $http, $window, $location) {
         })
     }
 
-    $scope.openTaskGroup = function(taskGroupId){
+    $scope.openTaskGroup = function(taskGroupId, taskGroupTitle){
         $location.path("/group/"+taskGroupId);
     }
 })
 
 
+/* ======================== Group View Page ======================== */
 
 
-app.controller("groupView", function($scope, $http, $window, $routeParams){
+app.controller("groupView", function($scope, $http, $routeParams){
     $scope.groupId = $routeParams.groupId;
-    console.log($scope.groupId);
-    $scope.defaultV = true;
-    $scope.addItemV = false;
 
-    $scope.items = 
-    [
-        {
-            task : "Walk Back to Home",
-            task_id: 23454
-        }
-    ];
+    $http({
+        method: 'GET',
+        url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
+        headers : {
+            'Authorization' : getCookie('token')
+        },
+    })
+    .then(function(response) {
+        $scope.tasks = response.data;
+        console.log($scope.tasks)
+    })
 
-    $scope.addItemView = function(){
-        $scope.defaultV = false;
-        $scope.addItemV = true;
-    }
-
-    $scope.removeTask = function(itemId){
-        console.log("remove task : ",itemId);
-    }
-
-    $scope.addTask = function(id, desc, groupId, taskStatus){
-        if (!taskStatus){
-            taskStatus = 0
-        }
+    $scope.addTask = function(desc){
         $http({
             method:'POST',
-            url: API_END_POINT.concat('task/'),
-            data: {'taskDescription':id, 'taskId':desc, 'taskGroupId':groupId, 'taskStatus':taskStatus}
+            url: API_END_POINT.concat('taskadd/' + $scope.groupId + "/"),
+            data: {
+                'task_description':desc
+            }
         })
         .success(function(response){
-            console.log(response);
+            console.log(response.message);
+
+            $http({
+                method: 'GET',
+                url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
+                headers : {
+                    'Authorization' : getCookie('token')
+                },
+            })
+            .then(function(response) {
+                $scope.tasks = response.data;
+                console.log($scope.tasks)
+            })
+        })
+    }
+
+    $scope.removeTask = function(taskId){
+        $http({
+            method: 'DELETE',
+            url: 'http://localhost:8000/list1/taskdelete',
+            data: {
+                'task_id': taskId
+            }
+        })
+        .then(function(response) {
+            console.log(response.message)
+            $http({
+                method: 'GET',
+                url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
+                headers : {
+                    'Authorization' : getCookie('token')
+                },
+            })
+            .then(function(response) {
+                $scope.tasks = response.data;
+                console.log($scope.tasks)
+            })
+        })
+    }
+
+    $scope.taskStatusChange = function(taskId, status){
+        $http({
+            method: 'PATCH',
+            url: 'http://localhost:8000/list1/taskstatuschange',
+            data: {
+                'task_id': taskId,
+                'task_status': status
+            }
+        })
+        .then(function(response) {
+            console.log(response.message)
+            $http({
+                method: 'GET',
+                url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
+                headers : {
+                    'Authorization' : getCookie('token')
+                },
+            })
+            .then(function(response) {
+                $scope.tasks = response.data;
+                console.log($scope.tasks)
+            })
         })
     }
 });
