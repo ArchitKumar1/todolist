@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import json
 from django.shortcuts import render_to_response
-from .models import *
+from .models import User,GroupTaskMapping,Group,Task
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse, request, response
 from django.views.decorators.csrf import csrf_exempt
@@ -11,7 +11,6 @@ from .random_string_generator import generate_random_string
 
 
 #================================================User Related Operators================================================#
-
 
 @csrf_exempt
 def login(request):
@@ -60,13 +59,20 @@ def group_add(request):
         return JsonResponse({'message': "group added"}, status=201)
 
 
-@csrf_exempt
 def group_get(request):
-    if (request.method == 'GET'):
-        user_id = decode(request)
-        groups = Group.objects.filter(user_id=user_id).values('pk', 'title')
-        return JsonResponse(list(groups), status=200, safe=False)
+    if(request.method == "POST"):
+        data = json.loads(request.body)
+        # user_id = decode(request)
+        user_id = data.get('user_id')
+        groups_public_owner = Group.objects.filter(user_id=user_id,type = "0").values('pk','title')
+        groups_public_not_owner = Group.objects.filter(user_id=user_id, type="0").values('pk', 'title')
+        groups_private_owner = Group.objects.filter(user_id=user_id, type="1").values('pk', 'title')
+        groups_private_not_owner = GroupTaskMapping.filter(user_id=user_id, type="1").values('pk', 'title')
+        groups_personal = Group.objects.filter(user_id = user_id,type ="2").values('group_id','title')
 
+        owner = list(set(list(groups_private_owner) + list(groups_public_owner) + list(groups_personal)))
+        not_owner =  list(set(list(groups_public_not_owner)+list(groups_private_not_owner)))
+        return JsonResponse({"owner" : owner,"not_owner" : not_owner}, status=200, safe=False)
 
 def group_delete(request):
     if request.method == 'DELETE':
@@ -113,6 +119,31 @@ def change_task_status(request):
         task = Task.objects.filter(task_id=data.get('task_id')).update(status=data.get('task_status'))
         return JsonResponse({"message": "Status Changed"}, status=202)
 
+
+#================================================Group share  Related Operators================================================#
+
+def share_group(request):
+    if request.method == 'POST':
+        # return JsonResponse("OK",safe = False);
+        data = json.loads(request.body)
+        group_id = data.get('group_id')
+        group_object = list(Group.objects.filter(group_id =group_id).values('title'))
+        # print group_object
+
+        group_name = group_object[0].get("title")
+        all_checked = data.get('all_checked')
+        if all_checked == True :
+            allusers = User.objects.all()
+            for user in list(allusers):
+                new_GroupTaskMapping =GroupTaskMapping(user_id= user.user_id,group_id = group_id,title = group_name)
+                new_GroupTaskMapping.save()
+        else:
+            user_ids = data.get('user_ids')
+            print user_ids
+            for user in list(user_ids):
+                new_GroupTaskMapping = GroupTaskMapping(user_id=str(user), group_id=group_id,title = group_name)
+                new_GroupTaskMapping.save()
+        return JsonResponse("OK",safe = False)
 
 def home(request):
     pass

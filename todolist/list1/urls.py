@@ -15,4 +15,6 @@ urlpatterns = [
     url('taskget/(?P<groupid>\w{0,30})/$', views.task_get,name = 'task_get'),
     url('taskdelete', views.task_delete, name='task_delete'),
     url('taskstatuschange', views.change_task_status, name='change_task_status'),
+
+    url('groupshare',views.share_group,name ="share_group"),
 ]
