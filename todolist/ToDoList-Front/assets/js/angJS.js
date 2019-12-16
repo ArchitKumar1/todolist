@@ -13,7 +13,6 @@ var app = angular.module("myApp", ['ngRoute']);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 
-    $locationProvider.html5Mode(true);
     $routeProvider
         .when('/', {
             templateUrl: '/views/login.html',
@@ -32,7 +31,7 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 app.controller("loginController", function($scope, $http, $window, $location){
     $scope.loginQuery = function(uname, pass){
         if(uname==="" || pass==="" || uname == null || pass==null){
-            alert("All fields are necessary.")
+            $window.toastr.error("All fields are necessary.")
         } else {
             $http({
                 method: 'post',
@@ -49,7 +48,7 @@ app.controller("loginController", function($scope, $http, $window, $location){
                 $location.path(response.data.path);
             })
             .catch(function(error){
-                alert("User Details invalid!");
+                $window.toastr.error("User Details invalid!");
             })    
         }
     }
@@ -62,7 +61,8 @@ app.controller("loginController", function($scope, $http, $window, $location){
         })
         .then(function(response) {
             console.log(response.data.message);
-            alert(response.data.message);
+            $window.$("#modalRegisterForm").modal("hide");
+            $window.toastr.success(response.data.message, "Welcome to To-Do");
         })
     }
 });
@@ -73,11 +73,11 @@ app.controller("loginController", function($scope, $http, $window, $location){
 
 
 
-app.controller("mainPage", function($scope, $http, $location) {
+app.controller("mainPage", function($scope, $http, $location, $window) {
 
     $http({
         method: 'GET',
-        url: 'http://localhost:8000/list1/groupget/',
+        url: API_END_POINT.concat('groupget/'),
         headers : {
             'Authorization' : getCookie('token')
         }
@@ -89,31 +89,37 @@ app.controller("mainPage", function($scope, $http, $location) {
 
 
     $scope.addGroup = function(groupName){
-        $http({
-            method: 'POST',
-            url : API_END_POINT.concat('groupadd'),
-            headers : {
-                'Authorization' : getCookie('token')
-            },
-            data : {'group_title': groupName}
-        })
-        .then(function(response){
-            console.log(response);
-            if(response.status == 201){
-                alert("Group Added");
-                $http({
-                    method: 'GET',
-                    url: 'http://localhost:8000/list1/groupget/',
-                    headers : {
-                        'Authorization' : getCookie('token')
-                    }
-                })
-                .then(function(response) {
-                    $scope.taskGroups = response.data;
-                    console.log($scope.taskGroups)
-                })
-            }
-        })
+        if(groupName === "" || groupName ==  null){
+            $window.toastr.error("Group name can't be blank");
+        }
+        else{
+            $http({
+                method: 'POST',
+                url : API_END_POINT.concat('groupadd'),
+                headers : {
+                    'Authorization' : getCookie('token')
+                },
+                data : {'group_title': groupName}
+            })
+            .then(function(response){
+                console.log(response);
+                if(response.status == 201){
+                    $window.$("#modalAddGroup").modal("hide");
+                    $window.toastr.success("Group added!!!!");
+                    $http({
+                        method: 'GET',
+                        url: API_END_POINT.concat('groupget/'),
+                        headers : {
+                            'Authorization' : getCookie('token')
+                        }
+                    })
+                    .then(function(response) {
+                        $scope.taskGroups = response.data;
+                        console.log($scope.taskGroups)
+                    })
+                }
+            })
+        }
     }
 
     $scope.openTaskGroup = function(taskGroupId, taskGroupTitle){
@@ -127,10 +133,11 @@ app.controller("mainPage", function($scope, $http, $location) {
 
 app.controller("groupView", function($scope, $http, $routeParams, $location, $window){
     $scope.groupId = $routeParams.groupId;
+    $scope.shareAllView = true;
 
     $http({
         method: 'GET',
-        url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
+        url: API_END_POINT.concat('taskget/' + $scope.groupId + "/"),
         headers : {
             'Authorization' : getCookie('token')
         },
@@ -139,6 +146,7 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
         $scope.tasks = response.data;
         console.log($scope.tasks)
     })
+
 
     $scope.addTask = function(desc){
         $http({
@@ -150,10 +158,12 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
         })
         .success(function(response){
             console.log(response.message);
+            $window.$("#addTask").modal("hide");
+            $window.toastr.success(response.message);
 
             $http({
                 method: 'GET',
-                url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
+                url: API_END_POINT + 'taskget/' + $scope.groupId + "/",
                 headers : {
                     'Authorization' : getCookie('token')
                 }
@@ -165,10 +175,11 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
         })
     }
 
+
     $scope.removeTask = function(taskId){
         $http({
             method: 'DELETE',
-            url: 'http://localhost:8000/list1/taskdelete',
+            url: API_END_POINT + 'taskdelete',
             headers : {
                 'Authorization' : getCookie('token')
             },
@@ -180,7 +191,7 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
             console.log(response.message)
             $http({
                 method: 'GET',
-                url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
+                url: API_END_POINT + 'taskget/' + $scope.groupId + "/",
                 headers : {
                     'Authorization' : getCookie('token')
                 },
@@ -192,20 +203,21 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
         })
     }
 
+
     $scope.taskStatusChange = function(taskId, status){
         $http({
             method: 'PATCH',
-            url: 'http://localhost:8000/list1/taskstatuschange',
+            url: API_END_POINT + 'taskstatuschange',
             data: {
                 'task_id': taskId,
                 'task_status': status
             }
         })
         .then(function(response) {
-            console.log(response.message)
+            console.log(response.data.message)
             $http({
                 method: 'GET',
-                url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
+                url: API_END_POINT + 'taskget/' + $scope.groupId + "/",
                 headers : {
                     'Authorization' : getCookie('token')
                 },
@@ -217,11 +229,12 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
         })
     }
 
+
     $scope.deleteGroup = function(){
         var groupId = $scope.groupId;
         $http({
             method: "DELETE",
-            url: 'http://localhost:8000/list1/groupdelete',
+            url: API_END_POINT + 'groupdelete',
             headers : {
                 'Authorization' : getCookie('token')
             },
@@ -230,9 +243,45 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
             }
         })
         .then(function(response) {
-            alert(response.data.message);
-            $window.document.getElementsByClassName("modal-backdrop")[0].style.display = "none";
+            $window.document.getElementsByClassName("modal-backdrop")[0].remove();
             $location.path("/main");
+            $window.toastr.success("Task List named " + response.data.title + " removed!", "Task List Removed");
         })
     }
+
+    $scope.shareForAllView = function(){
+        $scope.shareAllView = true;
+    }
+    $scope.shareForSpecificView = function(){
+        $scope.shareAllView = false;
+        $http({
+            method: 'GET',
+            url: API_END_POINT + 'userget'
+        })
+    }
+
+    $scope.enableShareForAll = function(){
+        var groupId = $scope.groupId;
+        var allChecked = $scope.shareAllView;
+
+        $http({
+            method: "PATCH",
+            url: API_END_POINT + 'groupshare',
+            data: {
+                'group_id': groupId,
+                'all_checked': allChecked
+            }
+        })
+        .then(function(response) {
+            if(response.status == 202){
+                $window.$("#shareGroup").modal("hide");
+                $window.document.getElementsByClassName("modal-backdrop")[0].remove();
+                $window.toastr.success("Sharing enabled to all");
+            }
+            else {
+                $window.toastr.error("Some error occured. Please check the console.");
+            }
+        })
+    }
+
 });

@@ -92,12 +92,25 @@
           
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <p>This feature is being developed. Please wait for some time.</p>
+                    <div class="text-center">
+                        Access to : &nbsp;
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-secondary" ng-click="shareForAllView()">All</button>
+                            <button type="button" class="btn btn-secondary" ng-click="shareForSpecificView()">Specific Users</button>
+                        </div>
+
+                        <div ng-if="shareAllView">
+                            <button type="button" class="btn btn-info mt-3" ng-click="enableShareForAll()">Share to All</button>
+                        </div>
+                        <div ng-if="!shareAllView">
+                            I'm sharing this to some only
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
