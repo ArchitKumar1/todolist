@@ -60,19 +60,18 @@ def group_add(request):
 
 
 def group_get(request):
-    if(request.method == "POST"):
-        data = json.loads(request.body)
-        # user_id = decode(request)
-        user_id = data.get('user_id')
+    if(request.method == "GET"):
+        user_id = decode(request)
+        #user_id = data.get('user_id')
         groups_public_owner = Group.objects.filter(user_id=user_id,type = "0").values('pk','title')
-        groups_public_not_owner = Group.objects.filter(user_id=user_id, type="0").values('pk', 'title')
+        groups_public_not_owner = Group.objects.filter(type="0").exclude(user_id=user_id).values('pk', 'title')
         groups_private_owner = Group.objects.filter(user_id=user_id, type="1").values('pk', 'title')
-        groups_private_not_owner = GroupTaskMapping.filter(user_id=user_id, type="1").values('pk', 'title')
+        groups_private_not_owner = GroupTaskMapping.objects.filter(user_id=user_id).values('pk', 'title')
         groups_personal = Group.objects.filter(user_id = user_id,type ="2").values('pk','title')
-
         owner = list(set(list(groups_private_owner) + list(groups_public_owner) + list(groups_personal)))
         not_owner =  list(set(list(groups_public_not_owner)+list(groups_private_not_owner)))
         return JsonResponse({"owner" : owner,"not_owner" : not_owner}, status=200, safe=False)
+
 
 def group_delete(request):
     if request.method == 'DELETE':
