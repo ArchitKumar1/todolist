@@ -3,6 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="fb6a710e-f748-41dc-a9f1-495ebe705126" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ToDoList-Front/assets/js/angJS.js" beforeDir="false" afterPath="$PROJECT_DIR$/ToDoList-Front/assets/js/angJS.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ToDoList-Front/views/group.html" beforeDir="false" afterPath="$PROJECT_DIR$/ToDoList-Front/views/group.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list1/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/list1/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list1/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/list1/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,10 +67,10 @@
     </state>
     <state x="436" y="237" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.808@0.23.1440.808" timestamp="1575912623528" />
     <state x="436" y="241" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.822@0.23.1440.822" timestamp="1575890259465" />
-    <state x="221" y="89" key="SettingsEditor" timestamp="1576394877252">
+    <state x="221" y="89" key="SettingsEditor" timestamp="1576469583783">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="221" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1576394877252" />
+    <state x="221" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1576469583783" />
     <state x="374" y="269" key="com.intellij.ide.util.TipDialog" timestamp="1576174003656">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

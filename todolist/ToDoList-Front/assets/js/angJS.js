@@ -125,7 +125,7 @@ app.controller("mainPage", function($scope, $http, $location) {
 /* ======================== Group View Page ======================== */
 
 
-app.controller("groupView", function($scope, $http, $routeParams){
+app.controller("groupView", function($scope, $http, $routeParams, $location, $window){
     $scope.groupId = $routeParams.groupId;
 
     $http({
@@ -156,7 +156,7 @@ app.controller("groupView", function($scope, $http, $routeParams){
                 url: 'http://localhost:8000/list1/taskget/' + $scope.groupId + "/",
                 headers : {
                     'Authorization' : getCookie('token')
-                },
+                }
             })
             .then(function(response) {
                 $scope.tasks = response.data;
@@ -169,6 +169,9 @@ app.controller("groupView", function($scope, $http, $routeParams){
         $http({
             method: 'DELETE',
             url: 'http://localhost:8000/list1/taskdelete',
+            headers : {
+                'Authorization' : getCookie('token')
+            },
             data: {
                 'task_id': taskId
             }
@@ -211,6 +214,25 @@ app.controller("groupView", function($scope, $http, $routeParams){
                 $scope.tasks = response.data;
                 console.log($scope.tasks)
             })
+        })
+    }
+
+    $scope.deleteGroup = function(){
+        var groupId = $scope.groupId;
+        $http({
+            method: "DELETE",
+            url: 'http://localhost:8000/list1/groupdelete',
+            headers : {
+                'Authorization' : getCookie('token')
+            },
+            data: {
+                'group_id': groupId
+            }
+        })
+        .then(function(response) {
+            alert(response.data.message);
+            $window.document.getElementsByClassName("modal-backdrop")[0].style.display = "none";
+            $location.path("/main");
         })
     }
 });

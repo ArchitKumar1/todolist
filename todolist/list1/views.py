@@ -68,6 +68,15 @@ def group_get(request):
         return JsonResponse(list(groups), status=200, safe=False)
 
 
+def group_delete(request):
+    if request.method == 'DELETE':
+        data = json.loads(request.body)
+        group = Group.objects.filter(group_id=data.get('group_id'))
+        group_title = group.values('title')
+        group.delete()
+        print(list(group_title))
+        return JsonResponse({"message": "Group Deleted", "title": list(group_title)}, status=202)
+
 #================================================Task Related Operators================================================#
 
 
@@ -90,7 +99,7 @@ def task_get(request, groupid):
         return JsonResponse(list(tasks), status=200, safe=False)
 
 
-def delete_task(request):
+def task_delete(request):
     if request.method == 'DELETE':
         data = json.loads(request.body)
         task = Task.objects.filter(task_id=data.get('task_id'))

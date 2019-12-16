@@ -8,9 +8,11 @@ urlpatterns = [
 
     url('groupadd', views.group_add,name = 'group_add'),
     url('groupget', views.group_get, name='group_get'),
+    url('groupdelete', views.group_delete, name='group_delete'),
+
 
     url('taskadd/(?P<groupid>\w{0,30})/$', views.task_add,name = 'task_add'),
     url('taskget/(?P<groupid>\w{0,30})/$', views.task_get,name = 'task_get'),
-    url('taskdelete', views.delete_task, name='delete_task'),
+    url('taskdelete', views.task_delete, name='task_delete'),
     url('taskstatuschange', views.change_task_status, name='change_task_status'),
 ]
