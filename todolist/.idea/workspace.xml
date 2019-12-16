@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb6a710e-f748-41dc-a9f1-495ebe705126" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/list1/random_gen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list1/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/list1/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list1/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/list1/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="fb6a710e-f748-41dc-a9f1-495ebe705126" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,6 +51,17 @@
       <updated>1575888587139</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="WindowStateProjectService">
     <state x="369" y="155" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1576218545171">
