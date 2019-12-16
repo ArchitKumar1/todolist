@@ -38,10 +38,10 @@ def user_add(request):
 
 # this is an internal function
 @csrf_exempt
-def user_get(request):
+def get_all_users(request):
     if (request.method == 'POST'):
-        serial = serializers.serialize('json', Task.objects.all())
-        return JsonResponse(json.loads(serial), safe=False)
+        all_users = list(User.objects.all().values('user_id'))
+        return JsonResponse(all_users, safe=False)
 
 
 #================================================Group Related Operators================================================#
@@ -68,7 +68,7 @@ def group_get(request):
         groups_public_not_owner = Group.objects.filter(user_id=user_id, type="0").values('pk', 'title')
         groups_private_owner = Group.objects.filter(user_id=user_id, type="1").values('pk', 'title')
         groups_private_not_owner = GroupTaskMapping.filter(user_id=user_id, type="1").values('pk', 'title')
-        groups_personal = Group.objects.filter(user_id = user_id,type ="2").values('group_id','title')
+        groups_personal = Group.objects.filter(user_id = user_id,type ="2").values('pk','title')
 
         owner = list(set(list(groups_private_owner) + list(groups_public_owner) + list(groups_personal)))
         not_owner =  list(set(list(groups_public_not_owner)+list(groups_private_not_owner)))

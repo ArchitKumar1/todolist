@@ -4,7 +4,7 @@ urlpatterns = [
     url('home', views.home, name='home'),
     url('login', views.login, name='login'),
     url('useradd', views.user_add,name = 'user_add'),
-    url('userget', views.user_get, name='user_get'),
+    url('userget', views.get_all_users, name='get_all_users'),
 
     url('groupadd', views.group_add,name = 'group_add'),
     url('groupget', views.group_get, name='group_get'),
