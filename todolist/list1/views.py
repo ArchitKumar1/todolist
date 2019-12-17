@@ -36,12 +36,29 @@ def user_add(request):
         return JsonResponse({"message": "User Added"}, status=201)
 
 
-# this is an internal function
 @csrf_exempt
 def get_all_users(request):
-    if (request.method == 'POST'):
-        all_users = list(User.objects.all().values('user_id'))
-        return JsonResponse(all_users, safe=False)
+    if (request.method == 'GET'):
+        user_id = decode(request)
+        all_users = list(User.objects.all().exclude(user_id=user_id).values('user_id'))
+        return JsonResponse({"users" : all_users}, status=200)
+
+
+@csrf_exempt
+def change_password(request):
+    if (request.method == 'PATCH'):
+        try:
+            data = json.loads(request.body)
+            new_password = data.get('password')
+            user_id = decode(request)
+            user = User.objects.filter(user_id=user_id)
+            user.update(password=new_password)
+            return JsonResponse({'message':'Password Updated'}, status=202)
+        except:
+            return JsonResponse({'message': 'Error Occured'}, status=401)
+
+
+
 
 
 #================================================Group Related Operators================================================#
@@ -60,27 +77,29 @@ def group_add(request):
 
 
 def group_get(request):
-    if(request.method == "POST"):
-        data = json.loads(request.body)
-        # user_id = decode(request)
-        user_id = data.get('user_id')
-        groups_public_owner = Group.objects.filter(user_id=user_id,type = "0").values('pk','title')
-        groups_public_not_owner = Group.objects.filter(user_id=user_id, type="0").values('pk', 'title')
-        groups_private_owner = Group.objects.filter(user_id=user_id, type="1").values('pk', 'title')
-        groups_private_not_owner = GroupTaskMapping.filter(user_id=user_id, type="1").values('pk', 'title')
-        groups_personal = Group.objects.filter(user_id = user_id,type ="2").values('pk','title')
+    if(request.method == "GET"):
+        user_id = decode(request)
+        groups_public_owner = Group.objects.filter(type = "1", user_id=user_id).values('pk','title')
+        groups_public_not_owner = Group.objects.filter(type="1").exclude(user_id=user_id).values('pk', 'title')
+        groups_personal = Group.objects.filter(user_id=user_id, type="2").values('pk', 'title')
+        groups_private_owner = Group.objects.filter(user_id=user_id, type="0").values('pk', 'title')
+        groups_private_not_owner = GroupTaskMapping.objects.filter(user_id=user_id).values('pk', 'title')
 
-        owner = list(set(list(groups_private_owner) + list(groups_public_owner) + list(groups_personal)))
-        not_owner =  list(set(list(groups_public_not_owner)+list(groups_private_not_owner)))
+        owner = list(groups_private_owner) + list(groups_public_owner) + list(groups_personal)
+        not_owner =  list(groups_public_not_owner)+list(groups_private_not_owner)
         return JsonResponse({"owner" : owner,"not_owner" : not_owner}, status=200, safe=False)
 
 def group_delete(request):
     if request.method == 'DELETE':
+        user_id = decode(request)
         data = json.loads(request.body)
-        group = Group.objects.filter(group_id=data.get('group_id'))
+        group = Group.objects.filter(group_id=data.get('group_id'), user_id=user_id)
+        if len(list(group)) == 0:
+            return JsonResponse({"message": "Only owner can delete the group!"}, status=401)
         group_title = group.values('title')
         group.delete()
-        print(list(group_title))
+        group = GroupTaskMapping.objects.filter(group_id=data.get('group_id'))
+        group.delete()
         return JsonResponse({"message": "Group Deleted", "title": list(group_title)}, status=202)
 
 #================================================Task Related Operators================================================#
@@ -124,26 +143,23 @@ def change_task_status(request):
 
 def share_group(request):
     if request.method == 'POST':
-        # return JsonResponse("OK",safe = False);
         data = json.loads(request.body)
         group_id = data.get('group_id')
-        group_object = list(Group.objects.filter(group_id =group_id).values('title'))
-        # print group_object
-
-        group_name = group_object[0].get("title")
+        user_id = decode(request)
+        group_object = Group.objects.filter(group_id = group_id, user_id = user_id)
+        if(len(list(group_object)) == 0):
+            return JsonResponse({"message": "Only owner can change this property!"}, status=401)
+        group_name = list(group_object.values('title'))[0].get("title")
         all_checked = data.get('all_checked')
         if all_checked == True :
-            allusers = User.objects.all()
-            for user in list(allusers):
-                new_GroupTaskMapping =GroupTaskMapping(user_id= user.user_id,group_id = group_id,title = group_name)
-                new_GroupTaskMapping.save()
+            group_object.update(type='1')
         else:
             user_ids = data.get('user_ids')
-            print user_ids
+            group_object.update(type='0')
             for user in list(user_ids):
                 new_GroupTaskMapping = GroupTaskMapping(user_id=str(user), group_id=group_id,title = group_name)
                 new_GroupTaskMapping.save()
-        return JsonResponse("OK",safe = False)
+        return JsonResponse({"message" : "Share enabled"}, status=202)
 
 def home(request):
     pass

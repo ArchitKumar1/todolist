@@ -15,7 +15,7 @@ class Group(models.Model):
     group_id = models.CharField(max_length=30,primary_key=True)
     title = models.CharField(max_length=30,default="")
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
-    type = models.CharField(max_length= 1,default="0")
+    type = models.CharField(max_length= 1,default="2")
 
 
 class Task(models.Model):
