@@ -1,4 +1,24 @@
 <div>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #00f3ff69;">
+        <a class="navbar-brand" href="#/main">To-Do Listing</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#/main">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#/resetPassword">Change Password <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+            <span class="navbar-text">
+                <button type="button" class="btn btn-primary" ng-click="signOut()">Sign Out</button>
+            </span>
+          </div>
+    </nav>
     <div>
         <table class="table table-condensed">
             <thead>
@@ -92,12 +112,33 @@
           
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <p>This feature is being developed. Please wait for some time.</p>
+                    <div class="text-center">
+                        Access to : &nbsp;
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-secondary" ng-click="shareForAllView()">All</button>
+                            <button type="button" class="btn btn-secondary" ng-click="shareForSpecificView()">Specific Users</button>
+                        </div>
+
+                        <div ng-if="shareAllView">
+                            <button type="button" class="btn btn-info mt-3" ng-click="enableShareForAll()">Share to All</button>
+                        </div>
+                        <div ng-if="!shareAllView">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr ng-repeat="user in listOfUsers" class="table-row">
+                                        <td>{{user.user_id}}</td>
+                                        <td><input type="checkbox" value="{{user.user_id}}" name="sharedWithSpecificUsers"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-info mt-3" ng-click="enableShareForSome()">Share to Selected</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>

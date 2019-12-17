@@ -211,12 +211,13 @@
                 <div class="modal-body mx-3">
                     <div class="md-form">
                         <input type="text" class="form-control mb-2" placeholder="User Id" ng-model="userid">
-                        <input type="password" class="form-control mb-2" placeholder="Your Password" ng-model="pass">
+                        <input type="password" class="form-control mb-2" placeholder="Your Password" ng-model="pass" data-trigger="focus" data-toggle="tooltip" data-container="body" data-placement="right" data-title="Password must contain a lowercase letter, an uppercase, atleast one digit, and in between 6-13 characters long.">
+                        <input type="password" class="form-control mb-2" placeholder="Re-Password" ng-model="repass">
                         <input type="text" class="form-control" placeholder="Your Name" ng-model="name">
                     </div>
                 </div>
                 <div class="text-center">
-                    <button type="button" class="btn btn-primary mb-3" ng-click="signup(userid, pass, name)">Sign up</button>
+                    <button type="button" class="btn btn-primary mb-3" ng-click="signup(userid, pass, repass, name)">Sign up</button>
                 </div>
             </div>
         </div>
