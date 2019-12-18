@@ -1,4 +1,4 @@
-API_END_POINT = 'http://localhost:8000/list1/';
+API_END_POINT = 'http://192.168.37.36:8000/list1/';
 
 function getCookie(name) {
     let cookie = {};
@@ -50,7 +50,7 @@ app.controller("loginController", function($scope, $http, $window, $location){
             $window.toastr.error("All fields are necessary.")
         } else {
             $http({
-                method: 'post',
+                method: 'POST',
                 url: API_END_POINT.concat('login'),
                 data: {'user_id':uname, 'password':pass}
             })
@@ -76,27 +76,45 @@ app.controller("loginController", function($scope, $http, $window, $location){
             $scope.repass = "";
         } else {
             let passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,16}$/;
-            if(pass.match(passRegex)){
-                $http({
-                    method: 'POST',
-                    url: API_END_POINT.concat('useradd'),
-                    data: {'name':name, 'user_id':userid, 'password':pass, 'active':true}
-                })
-                .then(function(response) {
-                    console.log(response.data.message);
-                    $window.$("#modalRegisterForm").modal("hide");
-                    $window.toastr.success(response.data.message, "Welcome to To-Do");
-                })
-            }
-            else {
-                $window.toastr.error("Password doesn't match the type requested!")
+            let usernameRegex = /^[a-zA-Z][a-zA-Z0-9]{4,}$/
+            if(userid.match(usernameRegex)){
+                if(pass.match(passRegex)){
+                    $http({
+                        method: 'POST',
+                        url: API_END_POINT.concat('useradd'),
+                        data: {'name':name, 'user_id':userid, 'password':pass, 'active':true}
+                    })
+                    .then(function(response) {
+                        console.log(response.data.message);
+                        $scope.userid = "";
+                        $scope.pass = "";
+                        $scope.repass = "";
+                        $scope.name = "";
+                        $window.$("#modalRegisterForm").modal("hide");
+                        $window.toastr.success(response.data.message, "Welcome to To-Do");
+                    })
+                    .catch(function(response){
+                        $window.toastr.error(response.data.message);
+                        $scope.userid = "";
+                    })
+                }
+                else {
+                    $window.toastr.error("Password doesn't satisfy the type requested!")
+                    $scope.userid = "";
+                        $scope.pass = "";
+                        $scope.repass = "";
+                        $scope.name = "";
+                }
+            } 
+            else{
+                $window.toastr.error("Username should start with alphabet and contain alphanumerics only.");
+                $scope.userid = "";
                 $scope.pass = "";
                 $scope.repass = "";
+                $scope.name = "";
             }
-            
         }
     }
-
 });
 
 
@@ -182,6 +200,10 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
     $scope.groupId = $routeParams.groupId;
     $scope.shareAllView = true;
     var token = getCookie('token');
+    if(getCookie('token') == "" || getCookie('token') == null){
+        $location.path('/');
+        $window.toastr.error('Please Log in Again','User Timed-Out')
+    }
 
     $http({
         method: 'GET',
@@ -218,6 +240,7 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
         .success(function(response){
             console.log(response.message);
             $window.$("#addTask").modal("hide");
+            $scope.addItemDesc = "";
             $window.toastr.success(response.message);
 
             $http({
@@ -392,7 +415,16 @@ app.controller("groupView", function($scope, $http, $routeParams, $location, $wi
 
 });
 
+
+
+
+
+
 app.controller("resetPass", function($scope, $http, $location, $window){
+    if(getCookie('token') == "" || getCookie('token') == null){
+        $location.path('/');
+        $window.toastr.error('Please Log in Again','User Timed-Out')
+    }
     $window.$("input[data-toggle='tooltip']").on('focus', function() {
         $(this).tooltip('show');
     });
@@ -400,12 +432,18 @@ app.controller("resetPass", function($scope, $http, $location, $window){
     $window.$("input[data-toggle='tooltip']").on('blur', function() {
         $(this).tooltip('hide');
     });
+
+    $scope.signOut = function() {
+        $window.document.cookie = "token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+        $location.path("/");
+        $window.toastr.success("Logged out successfully");
+    }
     
     $scope.changePassword = function(){
         if($scope.pass == $scope.repass) {
-            let passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,8}$/;
+            let passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,16}$/;
+            var pass  = $scope.pass;
             if(pass.match(passRegex)){
-                var pass  = $scope.pass;
                 $http({
                     method: 'PATCH',
                     url: API_END_POINT + 'passchange/',
@@ -426,7 +464,7 @@ app.controller("resetPass", function($scope, $http, $location, $window){
                 })
             }
             else{
-                $window.toastr.error("Password doesn't match the type requested!")
+                $window.toastr.error("Password doesn't satisfy the type requested!")
                 $scope.pass = "";
                 $scope.repass = "";
             }

@@ -28,7 +28,7 @@ JWT_ALGORITHM = 'HS384'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '127.0.0.1:5500']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '127.0.0.1:5500','192.168.37.36']
 
 
 # Application definition

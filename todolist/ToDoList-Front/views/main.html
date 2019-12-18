@@ -34,7 +34,7 @@
     <br><br>
     <h2 class="ml-2">Groups Shared to me : </h2>
     <div ng-repeat="taskGroup in groupsOther" style="display:inline-block" class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-        <div class="card border-primary mb-3" ng-click="openTaskGroup(taskGroup.pk, taskGroup.title)">
+        <div class="card border-primary mb-3" ng-click="openTaskGroup(taskGroup.group_id, taskGroup.title)">
             <div class="card-body text-secondary">
                 <h5 class="card-title">{{taskGroup.title}}</h5>
                 <p class="card-text">Click on card to open your task list for "{{taskGroup.title}}"</p>

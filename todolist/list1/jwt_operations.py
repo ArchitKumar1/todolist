@@ -1,6 +1,7 @@
 import jwt
 from django.http import request,JsonResponse
 import json
+from django.shortcuts import redirect
 from todolist.settings import SECRET_KEY_JWT, JWT_ALGORITHM
 
 def encode(user_id):
@@ -13,6 +14,8 @@ def encode(user_id):
 def decode(request):
     try:
         authorization_header = request.META.get('HTTP_AUTHORIZATION')
+        if not authorization_header:
+            return None
         token = authorization_header.split()[1]
         payload_data = jwt.decode(token, SECRET_KEY_JWT, algorithm=JWT_ALGORITHM)
         return payload_data.get('user_id')
